@@ -17,7 +17,8 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.title='auth example'
-OPERATORS = {'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}
+OPERATORS_L = ['+', '-', '*', '/']
+OPERATORS_V = ['add', 'sub', 'mul', 'div']
 auth = dash_auth.BasicAuth(
     app,
     VALID_USERNAME_PASSWORD_PAIRS
@@ -30,11 +31,14 @@ app.layout = html.Div([
 ## Resolve syntax issue for dynamic operator in python: https://stackoverflow.com/questions/1740726/turn-string-into-operator
     dcc.Dropdown(
         id='dropdown',
-        #options=[{'label': i, 'value': i} for i in ['**', '/', '+', '-', '*']],
-        options=[{'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}],
+        options=[
+            {'label':OPERATORS_L[0], 'value':OPERATORS_V[0]},
+            {'label':OPERATORS_L[1], 'value':OPERATORS_V[1]},
+            {'label':OPERATORS_L[2], 'value':OPERATORS_V[2]},
+            {'label':OPERATORS_L[3], 'value':OPERATORS_V[3]}],
+        #options=[{'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}],
 
-        value='+'
-    ),
+        value=OPERATORS_V[0]),
 
     html.Div(id='graph-title'),
     dcc.Graph(id='graph'),
