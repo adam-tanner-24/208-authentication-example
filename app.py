@@ -53,7 +53,7 @@ app.layout = html.Div([
 #    op1, op2 = int(op1), int(op2)
 #    return [oper(op1, op2)]
 def eval_binary_expr(a, op, b):
-    method = '__%s__' % OPERATORS[op]
+    method = '__%s__' % OPERATORS_V[op]
     return getattr(b, method)(a)
 
 @app.callback(
