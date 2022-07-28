@@ -3,7 +3,6 @@ import dash_auth
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
-import operator
 
 
 # Keep this out of source code repository - save in a file or a database
@@ -13,14 +12,12 @@ VALID_USERNAME_PASSWORD_PAIRS = {
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-def eval_binary_expr(op1, oper, op2):
-    op1, op2 = int(op1), int(op2)
-    return ops[oper](op1, op2)
 
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.title='auth example'
+OPERATORS = {'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}
 auth = dash_auth.BasicAuth(
     app,
     VALID_USERNAME_PASSWORD_PAIRS
@@ -34,13 +31,9 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='dropdown',
         #options=[{'label': i, 'value': i} for i in ['**', '/', '+', '-', '*']],
-        options= [{
-            '+' : operator.add,
-            '-' : operator.sub,
-            '*' : operator.mul,
-            '/' : operator.truediv,
-            '^' : operator.xor}],
-        value=operator.add
+        options=[{'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}],
+
+        value='+'
     ),
 
     html.Div(id='graph-title'),
@@ -49,6 +42,15 @@ app.layout = html.Div([
     html.Br(),
     html.A("Data Source", href='https://dash.plotly.com/authentication'),
 ], className='container')
+
+
+
+#def eval_binary_expr(op1, oper, op2):
+#    op1, op2 = int(op1), int(op2)
+#    return [oper(op1, op2)]
+def eval_binary_expr(a, op, b):
+    method = '__%s__' % OPERATORS[op]
+    return getattr(b, method)(a)
 
 @app.callback(
     Output('graph-title', 'children'),
