@@ -3,14 +3,20 @@ import dash_auth
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
+import operator
 
 
 # Keep this out of source code repository - save in a file or a database
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'Mickey': 'Mouse', 'Donald': 'Duck'
+    'Mickey': 'Mouse', 'Donald': 'Duck', 'Adam': 'Tanner'
 }
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+def eval_binary_expr(op1, oper, op2):
+    op1, op2 = int(op1), int(op2)
+    return ops[oper](op1, op2)
+
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
@@ -23,10 +29,18 @@ auth = dash_auth.BasicAuth(
 app.layout = html.Div([
     html.H1('Welcome to the app'),
     html.H3('You are successfully authorized'),
+    
+## Resolve syntax issue for dynamic operator in python: https://stackoverflow.com/questions/1740726/turn-string-into-operator
     dcc.Dropdown(
         id='dropdown',
-        options=[{'label': i, 'value': i} for i in [1, 2, 3, 4, 5]],
-        value=1
+        #options=[{'label': i, 'value': i} for i in ['**', '/', '+', '-', '*']],
+        options= [{
+            '+' : operator.add,
+            '-' : operator.sub,
+            '*' : operator.mul,
+            '/' : operator.truediv,
+            '^' : operator.xor}],
+        value=operator.add
     ),
 
     html.Div(id='graph-title'),
@@ -44,7 +58,8 @@ app.layout = html.Div([
 def update_graph(dropdown_value):
 
     x_values = [-3,-2,-1,0,1,2,3]
-    y_values = [x**dropdown_value for x in x_values]
+    #y_values = [eval(x (dropdown_value) x) for x in x_values]
+    y_values = [eval_binary_expr(x, dropdown_value, x) for x in x_values]
     colors=['black','red','green','blue','orange','purple']
     graph_title='Graph of {}'.format(str(dropdown_value))
 
