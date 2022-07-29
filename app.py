@@ -3,6 +3,7 @@ import dash_auth
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
+import operator 
 
 
 # Keep this out of source code repository - save in a file or a database
@@ -17,8 +18,16 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.title='auth example'
-OPERATORS_L = ['+', '-', '*', '/']
-OPERATORS_V = ['add', 'sub', 'mul', 'div']
+ops = {
+    '+' : operator.add,
+    '-' : operator.sub,
+    '*' : operator.mul,
+    '/' : operator.truediv,  # use operator.div for Python 2
+    '%' : operator.mod,
+    '^' : operator.xor,
+}
+# OPERATORS_L = ['+', '-', '*', '/']
+# OPERATORS_V = ['add', 'sub', 'mul', 'div']
 auth = dash_auth.BasicAuth(
     app,
     VALID_USERNAME_PASSWORD_PAIRS
@@ -31,31 +40,31 @@ app.layout = html.Div([
 ## Resolve syntax issue for dynamic operator in python: https://stackoverflow.com/questions/1740726/turn-string-into-operator
     dcc.Dropdown(
         id='dropdown',
-        options=[
-            {'label':OPERATORS_L[0], 'value':OPERATORS_V[0]},
-            {'label':OPERATORS_L[1], 'value':OPERATORS_V[1]},
-            {'label':OPERATORS_L[2], 'value':OPERATORS_V[2]},
-            {'label':OPERATORS_L[3], 'value':OPERATORS_V[3]}],
+        options=[{'label': i, 'value': i} for i in ['+','-','*','/','%','^']],
+            # {'label':OPERATORS_L[0], 'value':OPERATORS_V[0]},
+            # {'label':OPERATORS_L[1], 'value':OPERATORS_V[1]},
+            # {'label':OPERATORS_L[2], 'value':OPERATORS_V[2]},
+            # {'label':OPERATORS_L[3], 'value':OPERATORS_V[3]}],
         #options=[{'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}],
 
-        value=OPERATORS_V[0]),
+        value='+',
+    ),
 
     html.Div(id='graph-title'),
     dcc.Graph(id='graph'),
     html.A('Code on Github', href='https://github.com/austinlasseter/dash-auth-example'),
     html.Br(),
     html.A("Data Source", href='https://dash.plotly.com/authentication'),
-], className='container')
+        ],className='container')
 
 
 
 #def eval_binary_expr(op1, oper, op2):
 #    op1, op2 = int(op1), int(op2)
 #    return [oper(op1, op2)]
-def eval_binary_expr(a, op, b):
-    method = '__%s__' % OPERATORS_V[op]
-    return getattr(b, method)(a)
-
+def eval_binary_expr(op1, oper, op2):
+    op1, op2 = int(op1), int(op2)
+    return ops[oper](op1, op2)
 @app.callback(
     Output('graph-title', 'children'),
     Output('graph', 'figure'),
