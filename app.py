@@ -48,7 +48,7 @@ app.layout = html.Div([
     dcc.Graph(id='graph'),
     html.Div([
         html.P('Select an operator from the dropdown above to dynamically change the graph.'),
-        html.P('Once you select an operator from the drop down, the graph will execute the function x <dynamic operator> x where x values = [-3,-2,-1,0,1,2,3]')
+        html.P('Once you select an operator from the drop down, the graph will execute the function x <dynamic operator> x where x values = [-3,-2,-1,0,1,2,3]')]),
     html.A('Code on Github', href='https://github.com/adam-tanner-24/208-authentication-example'),
     html.Br(),
     html.A("Data Source", href='https://dash.plotly.com/authentication'),
