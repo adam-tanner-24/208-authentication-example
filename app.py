@@ -1,6 +1,8 @@
 import dash
 import dash_auth
-from dash import html, dcc
+import dash_html_components as html
+import dash_core_components as dcc
+#from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
 import operator 
@@ -22,7 +24,7 @@ ops = {
     '+' : operator.add,
     '-' : operator.sub,
     '*' : operator.mul,
-    '/' : operator.truediv,  # use operator.div for Python 2
+    '/' : operator.truediv,  
     '%' : operator.mod,
     '^' : operator.xor,
 }
@@ -65,14 +67,6 @@ app.layout = html.Div([
     Input('dropdown', 'value'),
     )
 def update_graph(dropdown_value):
-    ops = {
-    '+' : operator.add,
-    '-' : operator.sub,
-    '*' : operator.mul,
-    '/' : operator.truediv,  # use operator.div for Python 2
-    '%' : operator.mod,
-    '^' : operator.xor,}
-
     x_values = [-3,-2,-1,0,1,2,3]
     #y_values = [eval(x (dropdown_value) x) for x in x_values]
     y_values = [eval_binary_expr(x, str(dropdown_value), x) for x in x_values]
@@ -84,8 +78,8 @@ def update_graph(dropdown_value):
         x = x_values,
         y = y_values,
         mode = 'lines',
-        marker = 'red'
-       # marker = {'color': colors[dropdown_value]},
+        #marker = 'red',
+        marker = {'color': colors[3]},
     )
 
     # assign traces to data
