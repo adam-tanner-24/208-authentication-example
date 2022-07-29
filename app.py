@@ -1,8 +1,6 @@
 import dash
 import dash_auth
-import dash_html_components as html
-import dash_core_components as dcc
-#from dash import html, dcc
+from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
 import operator 
@@ -25,8 +23,7 @@ ops = {
     '-' : operator.sub,
     '*' : operator.mul,
     '/' : operator.truediv,  
-    '%' : operator.mod,
-    '^' : operator.xor,
+    '**' : operator.pow
 }
 def eval_binary_expr(op1, oper, op2):
     op1, op2 = int(op1), int(op2)
@@ -45,15 +42,17 @@ app.layout = html.Div([
 ## Resolve syntax issue for dynamic operator in python: https://stackoverflow.com/questions/1740726/turn-string-into-operator
     dcc.Dropdown(
         id='dropdown',
-        options=[{'label': i, 'value': i} for i in ['+','-','*','/','%','^']],
+        options=[{'label': i, 'value': i} for i in ['+','-','*','/','**']],
         value='+',
     ),
 
     html.Div(id='graph-title'),
     dcc.Graph(id='graph'),
-    html.Div([
-        html.P('Select an operator from the dropdown above to dynamically change the graph.'),
-        html.P('Once you select an operator from the drop down, the graph will execute the function x <dynamic operator> x where x values = [-3,-2,-1,0,1,2,3]')]),
+    html.Br(),
+    dcc.Markdown('''
+    **Select an operator from the dropdown above to dynamically change the graph.**
+    *Once you select an operator from the drop down, the graph will execute the function* `x <dynamic operator> x` *where x values =* `[-3,-2,-1,0,1,2,3]`
+    '''),
     html.A('Code on Github', href='https://github.com/adam-tanner-24/208-authentication-example'),
     html.Br(),
     html.A("Data Source", href='https://dash.plotly.com/authentication'),
@@ -79,7 +78,7 @@ def update_graph(dropdown_value):
         y = y_values,
         mode = 'lines',
         #marker = 'red',
-        marker = {'color': colors[3]},
+        marker = {'color': colors[2]},
     )
 
     # assign traces to data
