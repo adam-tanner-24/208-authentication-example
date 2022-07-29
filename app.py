@@ -26,8 +26,11 @@ ops = {
     '%' : operator.mod,
     '^' : operator.xor,
 }
-# OPERATORS_L = ['+', '-', '*', '/']
-# OPERATORS_V = ['add', 'sub', 'mul', 'div']
+def eval_binary_expr(op1, oper, op2):
+    op1, op2 = int(op1), int(op2)
+    return ops[oper](op1, op2)
+
+
 auth = dash_auth.BasicAuth(
     app,
     VALID_USERNAME_PASSWORD_PAIRS
@@ -55,19 +58,24 @@ app.layout = html.Div([
         ],className='container')
 
 
-def eval_binary_expr(op1, oper, op2):
-    op1, op2 = int(op1), int(op2)
-    return ops[oper](op1, op2)
+
 @app.callback(
     Output('graph-title', 'children'),
     Output('graph', 'figure'),
     Input('dropdown', 'value'),
     )
 def update_graph(dropdown_value):
+    ops = {
+    '+' : operator.add,
+    '-' : operator.sub,
+    '*' : operator.mul,
+    '/' : operator.truediv,  # use operator.div for Python 2
+    '%' : operator.mod,
+    '^' : operator.xor,}
 
     x_values = [-3,-2,-1,0,1,2,3]
     #y_values = [eval(x (dropdown_value) x) for x in x_values]
-    y_values = [eval_binary_expr(x, dropdown_value, x) for x in x_values]
+    y_values = [eval_binary_expr(x, str(dropdown_value), x) for x in x_values]
     colors=['black','red','green','blue','orange','purple']
     graph_title='Graph of {}'.format(str(dropdown_value))
 
