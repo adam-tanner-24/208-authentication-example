@@ -41,27 +41,20 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='dropdown',
         options=[{'label': i, 'value': i} for i in ['+','-','*','/','%','^']],
-            # {'label':OPERATORS_L[0], 'value':OPERATORS_V[0]},
-            # {'label':OPERATORS_L[1], 'value':OPERATORS_V[1]},
-            # {'label':OPERATORS_L[2], 'value':OPERATORS_V[2]},
-            # {'label':OPERATORS_L[3], 'value':OPERATORS_V[3]}],
-        #options=[{'+': 'add', '-': 'sub', '*': 'mul', '/': 'div'}],
-
         value='+',
     ),
 
     html.Div(id='graph-title'),
     dcc.Graph(id='graph'),
-    html.A('Code on Github', href='https://github.com/austinlasseter/dash-auth-example'),
+    html.Div([
+        html.P('Select an operator from the dropdown above to dynamically change the graph.'),
+        html.P('Once you select an operator from the drop down, the graph will execute the function x <dynamic operator> x where x values = [-3,-2,-1,0,1,2,3]')
+    html.A('Code on Github', href='https://github.com/adam-tanner-24/208-authentication-example'),
     html.Br(),
     html.A("Data Source", href='https://dash.plotly.com/authentication'),
         ],className='container')
 
 
-
-#def eval_binary_expr(op1, oper, op2):
-#    op1, op2 = int(op1), int(op2)
-#    return [oper(op1, op2)]
 def eval_binary_expr(op1, oper, op2):
     op1, op2 = int(op1), int(op2)
     return ops[oper](op1, op2)
@@ -83,7 +76,8 @@ def update_graph(dropdown_value):
         x = x_values,
         y = y_values,
         mode = 'lines',
-        marker = {'color': colors[dropdown_value]},
+        marker = 'red'
+       # marker = {'color': colors[dropdown_value]},
     )
 
     # assign traces to data
