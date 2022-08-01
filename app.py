@@ -22,7 +22,7 @@ ops = {
     '+' : operator.add,
     '-' : operator.sub,
     '*' : operator.mul,
-    '/' : operator.truediv,  
+    '/' : operator.floordiv,  
     '**' : operator.pow
 }
 def eval_binary_expr(op1, oper, op2):
