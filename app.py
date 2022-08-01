@@ -68,7 +68,11 @@ app.layout = html.Div([
 def update_graph(dropdown_value):
     x_values = [-3,-2,-1,0,1,2,3]
     #y_values = [eval(x (dropdown_value) x) for x in x_values]
-    y_values = [eval_binary_expr(x, str(dropdown_value), x) for x in x_values]
+    y_values =[] #[eval_binary_expr(x, str(dropdown_value), x) for x in x_values]
+    for x in x_values:
+        if x == 0 and dropdown_value == '/':
+            y_values.append(0)
+        else: y_values.append(eval_binary_expr(x, dropdown_value, x))
     colors=['black','red','green','blue','orange','purple']
     graph_title='Graph of {}'.format(str(dropdown_value))
 
